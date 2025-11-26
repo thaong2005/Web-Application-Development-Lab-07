@@ -84,10 +84,10 @@ this.createdAt = LocalDateTime.now();
 #### **Output:**
 
 **Create:**
-![Create Product Form](output/Create/create.png)
+![Create Product Form](./product-management/output/Create/create.png)
 
 **After Create:**
-![After Create - Success Message](output/Create/afterCreate.png)
+![After Create - Success Message](./product-management/output/Create/afterCreate.png)
 
 ---
 
@@ -210,12 +210,11 @@ List<Product> findByNameContaining(String keyword);
 
 **List:**
 
-![Product List](output/List/list.png)
+![Product List](./product-management/output/List/list.png)
 
 **Search:**
 
-![Search Products](output/List/search.png)
-
+![Search Products](./product-management/output/List/search.png)
 ---
 ### 3️⃣ UPDATE - Update product
 
@@ -278,12 +277,11 @@ product.getId() == null ? "Product added successfully!"
 
 **Update:**
 
-![Update Product Form](output/Update/update.png)
+![Update Product Form](./product-management/output/Update/update.png)
 
 **After Update:**
 
-![After Update - Success Message](output/Update/afterUpdate.png)
-
+![After Update - Success Message](./product-management/output/Update/afterUpdate.png)
 ---
 
 ### 4️⃣ DELETE - Delete the product
@@ -348,10 +346,9 @@ onclick="return confirm('Are you sure you want to delete this product?')">
 
 **Delete Confirmation:**
 
-![Delete Confirmation](output/Delete/delete.png)
+![Delete Confirmation](./product-management/output/Delete/delete.png)
 
 **After Delete:**
 
-![After Delete - Success Message](output/Delete/afterDelete.png)
-
+![After Delete - Success Message](./product-management/output/Delete/afterDelete.png)
 ---
