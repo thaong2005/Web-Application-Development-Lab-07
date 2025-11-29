@@ -33,6 +33,27 @@
             text-align: center;
         }
         
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .nav-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        
+        .nav-button:hover {
+            background-color: #218838;
+        }
+        
         .alert {
             padding: 15px;
             margin-bottom: 20px;
@@ -136,11 +157,122 @@
             display: flex;
             gap: 5px;
         }
+        
+        /* Advanced Search Styles */
+        .search-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .search-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .search-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .search-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .search-field input,
+        .search-field select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .search-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 20px 0;
+        }
+        
+        .pagination a,
+        .pagination span {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #667eea;
+        }
+        
+        .pagination a:hover {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .pagination .active {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .pagination .disabled {
+            color: #ccc;
+            pointer-events: none;
+        }
+        
+        .filter-dropdown {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        /* EXERCISE 7: SORTING STYLES */
+        th a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        th a:hover {
+            text-decoration: underline;
+        }
+        
+        .sort-indicator {
+            margin-left: 5px;
+            font-size: 14px;
+        }
+        
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📦 Product Management System</h1>
+        <!-- Page Header with Dashboard Link -->
+        <div class="page-header">
+            <h1>📦 Product Management System</h1>
+            <a th:href="@{/dashboard}" class="nav-button">📊 View Dashboard</a>
+        </div>
         
         <!-- Success Message -->
         <div th:if="${message}" class="alert alert-success">
@@ -152,14 +284,93 @@
             <span th:text="${error}"></span>
         </div>
         
+        <!-- EXERCISE 5: ADVANCED SEARCH -->
+        
+        <!-- Advanced Search Form (Task 5.1) -->
+        <div class="search-container">
+            <h3 style="margin-bottom: 15px; color: #667eea;">🔍 Advanced Search</h3>
+            <form th:action="@{/products/advanced-search}" method="get">
+                <div class="search-row">
+                    <div class="search-field">
+                        <label for="name">Product Name</label>
+                        <input type="text" id="name" name="name" 
+                               th:value="${searchName}" 
+                               placeholder="Search by name...">
+                    </div>
+                    
+                    <div class="search-field">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" class="filter-dropdown">
+                            <option value="">All Categories</option>
+                            <option th:each="cat : ${categories}" 
+                                    th:value="${cat}" 
+                                    th:text="${cat}"
+                                    th:selected="${cat == selectedCategory}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="search-row">
+                    <div class="search-field">
+                        <label for="minPrice">Min Price ($)</label>
+                        <input type="number" id="minPrice" name="minPrice" 
+                               th:value="${minPrice}" 
+                               step="0.01" min="0" 
+                               placeholder="0.00">
+                    </div>
+                    
+                    <div class="search-field">
+                        <label for="maxPrice">Max Price ($)</label>
+                        <input type="number" id="maxPrice" name="maxPrice" 
+                               th:value="${maxPrice}" 
+                               step="0.01" min="0" 
+                               placeholder="9999.99">
+                    </div>
+                    
+                    <div class="search-buttons">
+                        <button type="submit" class="btn btn-primary">🔍 Search</button>
+                        <a th:href="@{/products}" class="btn" style="background: #6c757d; color: white;">Clear</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Quick Category Filter (Task 5.2 + Task 7.2) -->
+        <div style="margin-bottom: 20px;">
+            <form th:action="@{/products}" method="get" style="display: inline-block;">
+                <label for="quickCategory" style="margin-right: 10px; font-weight: 500;">Quick Filter:</label>
+                <select id="quickCategory" name="category" class="filter-dropdown" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    <option th:each="cat : ${categories}" 
+                            th:value="${cat}" 
+                            th:text="${cat}"
+                            th:selected="${cat == selectedCategory}">
+                    </option>
+                </select>
+                <!-- Maintain sorting state when filtering (Task 7.2) -->
+                <input type="hidden" name="sortBy" th:value="${sortBy}" />
+                <input type="hidden" name="sortDir" th:value="${sortDir}" />
+            </form>
+        </div>
+        
         <!-- Actions -->
         <div class="actions">
             <a th:href="@{/products/new}" class="btn btn-primary">➕ Add New Product</a>
             
+            <!-- Simple Search with Pagination (Task 5.3) -->
             <form th:action="@{/products/search}" method="get" class="search-form">
-                <input type="text" name="keyword" th:value="${keyword}" placeholder="Search products..." />
+                <input type="text" name="keyword" th:value="${keyword}" placeholder="Quick search with pagination..." />
+                <input type="hidden" name="page" value="0" />
+                <input type="hidden" name="size" value="10" />
                 <button type="submit" class="btn btn-primary">🔍 Search</button>
             </form>
+        </div>
+        
+        <!-- Results Info -->
+        <div th:if="${totalItems != null}" style="margin: 10px 0; color: #666;">
+            <strong>Found <span th:text="${totalItems}">0</span> products</strong>
+            <span th:if="${keyword != null}"> matching "<span th:text="${keyword}"></span>"</span>
         </div>
         
         <!-- Products Table -->
@@ -169,9 +380,25 @@
                     <tr>
                         <th>ID</th>
                         <th>Code</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
+                        <!-- EXERCISE 7: SORTABLE COLUMNS (Task 7.1) -->
+                        <th class="sortable">
+                            <a th:href="@{/products(sortBy='name',sortDir=${sortBy=='name' and sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}">
+                                Name
+                                <span th:if="${sortBy=='name'}" th:text="${sortDir=='asc'?'↑':'↓'}" class="sort-indicator"></span>
+                            </a>
+                        </th>
+                        <th class="sortable">
+                            <a th:href="@{/products(sortBy='price',sortDir=${sortBy=='price' and sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}">
+                                Price
+                                <span th:if="${sortBy=='price'}" th:text="${sortDir=='asc'?'↑':'↓'}" class="sort-indicator"></span>
+                            </a>
+                        </th>
+                        <th class="sortable">
+                            <a th:href="@{/products(sortBy='quantity',sortDir=${sortBy=='quantity' and sortDir=='asc'?'desc':'asc'},category=${selectedCategory})}">
+                                Quantity
+                                <span th:if="${sortBy=='quantity'}" th:text="${sortDir=='asc'?'↑':'↓'}" class="sort-indicator"></span>
+                            </a>
+                        </th>
                         <th>Category</th>
                         <th>Actions</th>
                     </tr>
@@ -202,6 +429,47 @@
         <!-- Empty State -->
         <div th:if="${products == null or products.isEmpty()}" class="empty-state">
             <p>No products found. Add your first product!</p>
+        </div>
+        
+        <!-- Pagination (Task 5.3) -->
+        <div th:if="${totalPages != null and totalPages > 1}" class="pagination">
+            <!-- Previous Button -->
+            <a th:if="${currentPage > 0}" 
+               th:href="@{/products/search(keyword=${keyword}, page=${currentPage - 1}, size=10)}"
+               class="btn btn-sm">
+                ← Previous
+            </a>
+            <span th:if="${currentPage == 0}" class="btn btn-sm disabled">
+                ← Previous
+            </span>
+            
+            <!-- Page Numbers -->
+            <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:if="${i != currentPage}"
+                   th:href="@{/products/search(keyword=${keyword}, page=${i}, size=10)}"
+                   th:text="${i + 1}"
+                   class="btn btn-sm">
+                </a>
+                <span th:if="${i == currentPage}" 
+                      th:text="${i + 1}"
+                      class="btn btn-sm active">
+                </span>
+            </span>
+            
+            <!-- Next Button -->
+            <a th:if="${currentPage < totalPages - 1}" 
+               th:href="@{/products/search(keyword=${keyword}, page=${currentPage + 1}, size=10)}"
+               class="btn btn-sm">
+                Next →
+            </a>
+            <span th:if="${currentPage >= totalPages - 1}" class="btn btn-sm disabled">
+                Next →
+            </span>
+            
+            <!-- Page Info -->
+            <span style="margin-left: 20px; color: #666;">
+                Page <strong th:text="${currentPage + 1}">1</strong> of <strong th:text="${totalPages}">1</strong>
+            </span>
         </div>
     </div>
 </body>
